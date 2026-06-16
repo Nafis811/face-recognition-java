@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.facerecognitionsystem.controller.HistoryController"
+            prefHeight="680.0" prefWidth="900.0"
+            style="-fx-background-color: #f5f6fa;">
+
+    <!-- TOP: Header -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="16"
+              style="-fx-background-color: #ffffff; -fx-padding: 18; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;">
+            <Button text="← Kembali"
+                    onAction="#handleBack"
+                    style="-fx-background-color: transparent; -fx-text-fill: #0984e3; -fx-font-size: 13px; -fx-cursor: hand; -fx-border-width: 0;"/>
+            <Label text="Riwayat Pengenalan"
+                   style="-fx-text-fill: #2d3436; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+
+    <!-- CENTER -->
+    <center>
+        <VBox style="-fx-padding: 24;" spacing="12">
+
+            <!-- Toolbar -->
+            <HBox alignment="CENTER_RIGHT" spacing="10">
+                <Label fx:id="totalLabel" text="Total: 0 data"
+                       style="-fx-text-fill: #636e72; -fx-font-size: 13px;"/>
+                <Button text="Refresh"
+                        onAction="#handleRefresh"
+                        onMouseEntered="#onRefreshHover"
+                        onMouseExited="#onRefreshExit"
+                        style="-fx-background-color: #0984e3; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 8 20; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand;"/>            </HBox>
+
+            <!-- Table -->
+            <TableView fx:id="historyTable" VBox.vgrow="ALWAYS"
+                       style="-fx-background-color: #ffffff; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8;">
+                <columns>
+                    <TableColumn fx:id="colNo" text="No" prefWidth="60"/>
+                    <TableColumn fx:id="colName" text="Nama" prefWidth="220"/>
+                    <TableColumn fx:id="colStatus" text="Status" prefWidth="130"/>
+                    <TableColumn fx:id="colConfidence" text="Confidence" prefWidth="130"/>
+                    <TableColumn fx:id="colTime" text="Waktu" prefWidth="280"/>
+                </columns>
+                <placeholder>
+                    <Label text="Belum ada data riwayat."
+                           style="-fx-text-fill: #b2bec3; -fx-font-size: 13px;"/>
+                </placeholder>
+            </TableView>
+
+        </VBox>
+    </center>
+
+</BorderPane>

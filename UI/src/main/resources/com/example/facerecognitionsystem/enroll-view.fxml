@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.facerecognitionsystem.controller.EnrollController"
+            prefHeight="680.0" prefWidth="900.0"
+            style="-fx-background-color: #f5f6fa;">
+
+    <!-- TOP: Header -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="16"
+              style="-fx-background-color: #ffffff; -fx-padding: 18; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;">
+            <Button text="← Kembali"
+                    onAction="#handleBack"
+                    style="-fx-background-color: transparent; -fx-text-fill: #0984e3; -fx-font-size: 13px; -fx-cursor: hand; -fx-border-width: 0;"/>
+            <Label text="Enroll Wajah Baru"
+                   style="-fx-text-fill: #2d3436; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+
+    <!-- CENTER -->
+    <center>
+        <HBox spacing="30" alignment="CENTER" style="-fx-padding: 40;">
+
+            <!-- Kiri: Camera -->
+            <VBox alignment="CENTER" spacing="12">
+                <StackPane style="-fx-background-color: #dfe6e9; -fx-border-color: #b2bec3; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8;"
+                           prefWidth="420" prefHeight="300">
+                    <ImageView fx:id="enrollCameraView"
+                               fitWidth="420" fitHeight="300"
+                               preserveRatio="true"/>
+                    <Label text="Preview Kamera"
+                           style="-fx-text-fill: #636e72; -fx-font-size: 13px;"/>
+                </StackPane>
+                <Button text="Ambil Foto"
+                        onAction="#handleCapture"
+                        onMouseEntered="#onCaptureHover"
+                        onMouseExited="#onCaptureExit"
+                        style="-fx-background-color: #0984e3; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10 30; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand;"/>
+            </VBox>
+
+            <!-- Kanan: Form -->
+            <VBox alignment="TOP_LEFT" spacing="16"
+                  style="-fx-background-color: #ffffff; -fx-padding: 30; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-pref-width: 280;">
+                <Label text="Informasi Pendaftaran"
+                       style="-fx-text-fill: #2d3436; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+                <VBox spacing="6">
+                    <Label text="Nama Lengkap"
+                           style="-fx-text-fill: #636e72; -fx-font-size: 12px;"/>
+                    <TextField fx:id="nameField"
+                               promptText="Masukkan nama lengkap..."
+                               style="-fx-background-color: #f5f6fa; -fx-border-color: #dfe6e9; -fx-border-width: 1; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 10; -fx-font-size: 13px;"/>
+                </VBox>
+
+                <Label fx:id="statusLabel" text=""
+                       style="-fx-font-size: 12px;" wrapText="true"/>
+
+                <Button text="Daftarkan Wajah"
+                        onAction="#handleEnroll"
+                        onMouseEntered="#onEnrollHover"
+                        onMouseExited="#onEnrollExit"
+                        style="-fx-background-color: #00b894; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10 20; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand; -fx-pref-width: 220;"/>            </VBox>
+
+        </HBox>
+    </center>
+
+</BorderPane>
