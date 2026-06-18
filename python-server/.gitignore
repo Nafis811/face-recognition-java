@@ -1,0 +1,17 @@
+# Auto-generated
+encodings.pkl
+
+# Dataset foto 
+dataset/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Test script
+test_recognize.py
+
+# Virtual environment
+venv/
+env/
