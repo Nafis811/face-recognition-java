@@ -1,8 +1,10 @@
 import face_recognition
 import pickle
 import os
-from PIL import Image, ExifTags
 import numpy as np
+
+from collections import Counter
+from PIL import Image, ExifTags
 
 DATASET_PATH = "dataset"
 ENCODINGS_PATH = "encodings.pkl"
@@ -53,4 +55,9 @@ for name in os.listdir(DATASET_PATH):
 with open(ENCODINGS_PATH, "wb") as f:
     pickle.dump(data, f)
 
+with open("encodings.pkl", "rb") as f:
+    data = pickle.load(f)
+
 print(f"\nSelesai. Total encoding: {len(data['names'])}")
+print(Counter(data["names"]))
+print(f"Total: {len(data['names'])}")
