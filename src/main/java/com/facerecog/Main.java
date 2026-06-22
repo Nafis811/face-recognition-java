@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
         System.out.println("=== Face Recognition Java - Demo ===");
 
-        var client = new RecognitionClientImpl(true); // mock = true
+        var client = new RecognitionClientImpl(false);
         var camera = new CameraServiceImpl(client);
 
         camera.startCapture((frame, result) -> {
