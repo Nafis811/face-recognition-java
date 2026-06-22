@@ -4,16 +4,19 @@ import com.example.facerecognitionsystem.model.AttendanceLog;
 import com.example.facerecognitionsystem.model.RecognitionResult;
 import com.example.facerecognitionsystem.repository.SQLiteLogRepository;
 import com.example.facerecognitionsystem.service.CameraService;
-import com.example.facerecognitionsystem.service.MockCameraService;
-import com.example.facerecognitionsystem.service.MockRecognitionClient;
+import com.example.facerecognitionsystem.service.RealCameraService;
+import com.example.facerecognitionsystem.service.RealRecognitionClient;
 import com.example.facerecognitionsystem.HelloApplication;
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 
+import java.awt.image.BufferedImage;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
@@ -36,11 +39,17 @@ public class MainController {
     @FXML
     public void initialize() {
         logRepository = new SQLiteLogRepository();
-        cameraService = new MockCameraService(new MockRecognitionClient());
+        cameraService = new RealCameraService(new RealRecognitionClient());
     }
 
-    public void updateUI(RecognitionResult result) {
+    public void updateUI(RecognitionResult result, BufferedImage frame) {
         Platform.runLater(() -> {
+            // Tampilkan frame kamera di UI
+            if (frame != null) {
+                WritableImage fxImage = SwingFXUtils.toFXImage(frame, null);
+                cameraView.setImage(fxImage);
+            }
+
             if (result.isRecognized()) {
                 nameLabel.setText("Terdeteksi: " + result.getPersonName());
                 nameLabel.setStyle("-fx-text-fill: #00b894; -fx-font-size: 18px; -fx-font-weight: bold;");
@@ -62,9 +71,9 @@ public class MainController {
     private void handleStartCamera() {
         if (!cameraService.isRunning()) {
             startButton.setText("⏹ Stop Kamera");
-            cameraService.startCapture((frame, result) -> updateUI(result));
+            cameraService.startCapture((frame, result) -> updateUI(result, frame));
         } else {
-            startButton.setText("Mulai Kamera");
+            startButton.setText("▶ Mulai Kamera");
             cameraService.stopCapture();
         }
     }

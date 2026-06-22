@@ -23,17 +23,10 @@ public class MockCameraService implements CameraService {
         running = true;
         executor = Executors.newSingleThreadScheduledExecutor();
 
-        // Kirim frame setiap 1 detik
         executor.scheduleAtFixedRate(() -> {
-            // Buat frame kosong (mock)
             BufferedImage mockFrame = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
-
-            // Kirim ke recognition client
             RecognitionResult result = recognitionClient.recognize(mockFrame);
-
-            // Callback ke listener (UI)
             listener.onFrame(mockFrame, result);
-
         }, 0, 1000, TimeUnit.MILLISECONDS);
     }
 
