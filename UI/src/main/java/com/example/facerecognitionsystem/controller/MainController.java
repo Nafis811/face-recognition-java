@@ -1,80 +1,146 @@
 package com.example.facerecognitionsystem.controller;
 
+import com.example.facerecognitionsystem.HelloApplication;
 import com.example.facerecognitionsystem.model.AttendanceLog;
 import com.example.facerecognitionsystem.model.RecognitionResult;
+import com.example.facerecognitionsystem.model.UserSession;
 import com.example.facerecognitionsystem.repository.SQLiteLogRepository;
 import com.example.facerecognitionsystem.service.CameraService;
 import com.example.facerecognitionsystem.service.RealCameraService;
 import com.example.facerecognitionsystem.service.RealRecognitionClient;
-import com.example.facerecognitionsystem.HelloApplication;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 
 import java.awt.image.BufferedImage;
-import java.time.format.DateTimeFormatter;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.UUID;
 
+/** Controller halaman autentikasi wajah LMS. */
 public class MainController {
-
     @FXML private ImageView cameraView;
     @FXML private Label nameLabel;
     @FXML private Label confidenceLabel;
-    @FXML private Label timeLabel;
+    @FXML private Label serverStatusLabel;
     @FXML private Button startButton;
+    @FXML private VBox cameraPlaceholder;
+    @FXML private Circle serverStatusDot;
 
     private SQLiteLogRepository logRepository;
     private CameraService cameraService;
-
-    private static final String STYLE_BLUE = "-fx-background-color: #0984e3; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10 24; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand;";
-    private static final String STYLE_BLUE_HOVER = "-fx-background-color: #0773c5; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10 24; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(9,132,227,0.4), 10, 0, 0, 3); -fx-translate-y: -2;";
-    private static final String STYLE_GRAY = "-fx-background-color: #636e72; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10 24; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand;";
-    private static final String STYLE_GRAY_HOVER = "-fx-background-color: #4d5659; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10 24; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 3); -fx-translate-y: -2;";
+    private boolean loginInProgress;
+    private static final double LOGIN_CONFIDENCE = 0.60;
 
     @FXML
     public void initialize() {
+        UserSession.logout();
         logRepository = new SQLiteLogRepository();
         cameraService = new RealCameraService(new RealRecognitionClient());
+        Rectangle cameraClip = new Rectangle(680, 360);
+        cameraClip.setArcWidth(26);
+        cameraClip.setArcHeight(26);
+        cameraView.setClip(cameraClip);
+        checkRecognitionServer();
     }
 
-    public void updateUI(RecognitionResult result, BufferedImage frame) {
+    private void checkRecognitionServer() {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8000/docs"))
+                .timeout(Duration.ofSeconds(2))
+                .GET()
+                .build();
+
+        HttpClient.newHttpClient().sendAsync(request, HttpResponse.BodyHandlers.discarding())
+                .whenComplete((response, error) -> Platform.runLater(() -> {
+                    boolean online = error == null && response.statusCode() < 500;
+                    serverStatusLabel.setText(online ? "Server siap" : "Server belum aktif");
+                    serverStatusLabel.setStyle(online
+                            ? "-fx-text-fill: #15803d;"
+                            : "-fx-text-fill: #dc2626;");
+                    serverStatusDot.setStyle(online ? "-fx-fill: #22c55e;" : "-fx-fill: #ef4444;");
+                }));
+    }
+
+    private void updateUI(BufferedImage frame, RecognitionResult result) {
         Platform.runLater(() -> {
-            // Tampilkan frame kamera di UI
             if (frame != null) {
-                WritableImage fxImage = SwingFXUtils.toFXImage(frame, null);
-                cameraView.setImage(fxImage);
+                WritableImage image = SwingFXUtils.toFXImage(frame, null);
+                cameraView.setImage(image);
+                applyCenteredCameraCrop(image);
+                cameraPlaceholder.setVisible(false);
             }
 
-            if (result.isRecognized()) {
-                nameLabel.setText("Terdeteksi: " + result.getPersonName());
-                nameLabel.setStyle("-fx-text-fill: #00b894; -fx-font-size: 18px; -fx-font-weight: bold;");
-                confidenceLabel.setText(String.format("Confidence: %.0f%%", result.getConfidence() * 100));
+            boolean validLogin = result.isRecognized()
+                    && result.getPersonName() != null
+                    && result.getConfidence() >= LOGIN_CONFIDENCE;
+
+            if (validLogin) {
+                nameLabel.setText("Wajah dikenali: " + result.getPersonName());
+                nameLabel.setStyle("-fx-text-fill: #16a34a;");
+                confidenceLabel.setText(String.format("Kecocokan %.0f%% - membuka dashboard...", result.getConfidence() * 100));
             } else {
-                nameLabel.setText("Terdeteksi: UNKNOWN");
-                nameLabel.setStyle("-fx-text-fill: #d63031; -fx-font-size: 18px; -fx-font-weight: bold;");
-                confidenceLabel.setText("Confidence: -");
+                nameLabel.setText("Wajah belum dikenali");
+                nameLabel.setStyle("-fx-text-fill: #dc2626;");
+                confidenceLabel.setText("Pastikan wajah terlihat jelas dan menghadap kamera");
             }
-            timeLabel.setText("Waktu: " + result.getTimestamp()
-                    .format(DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss")));
 
-            AttendanceLog log = new AttendanceLog(UUID.randomUUID().toString(), result);
-            logRepository.save(log);
+            if (validLogin && !loginInProgress) {
+                loginInProgress = true;
+                logRepository.save(new AttendanceLog(UUID.randomUUID().toString(), result));
+                cameraService.stopCapture();
+                UserSession.login(result.getPersonName());
+                HelloApplication.navigateTo("dashboard-view.fxml");
+            }
         });
+    }
+
+    /** Memotong frame dari tengah agar memenuhi bidang 680x360 tanpa distorsi. */
+    private void applyCenteredCameraCrop(WritableImage image) {
+        double targetRatio = 680.0 / 360.0;
+        double imageRatio = image.getWidth() / image.getHeight();
+        double x = 0;
+        double y = 0;
+        double width = image.getWidth();
+        double height = image.getHeight();
+
+        if (imageRatio > targetRatio) {
+            width = height * targetRatio;
+            x = (image.getWidth() - width) / 2.0;
+        } else {
+            height = width / targetRatio;
+            y = (image.getHeight() - height) / 2.0;
+        }
+        cameraView.setViewport(new Rectangle2D(x, y, width, height));
     }
 
     @FXML
     private void handleStartCamera() {
         if (!cameraService.isRunning()) {
-            startButton.setText("⏹ Stop Kamera");
-            cameraService.startCapture((frame, result) -> updateUI(result, frame));
+            checkRecognitionServer();
+            startButton.setText("Hentikan pemindaian");
+            nameLabel.setText("Mencari wajah...");
+            confidenceLabel.setText("Tetap menghadap kamera selama proses pemindaian");
+            cameraService.startCapture(this::updateUI);
         } else {
-            startButton.setText("▶ Mulai Kamera");
+            startButton.setText("Mulai pemindaian wajah");
             cameraService.stopCapture();
+            cameraView.setImage(null);
+            cameraView.setViewport(null);
+            cameraPlaceholder.setVisible(true);
+            nameLabel.setText("Pemindaian dihentikan");
+            confidenceLabel.setText("Tekan tombol mulai untuk mencoba kembali");
         }
     }
 
@@ -88,25 +154,5 @@ public class MainController {
     private void handleHistory() {
         cameraService.stopCapture();
         HelloApplication.navigateTo("history-view.fxml");
-    }
-
-    @FXML
-    private void onStartHover(MouseEvent e) {
-        ((Button) e.getSource()).setStyle(STYLE_BLUE_HOVER);
-    }
-
-    @FXML
-    private void onStartExit(MouseEvent e) {
-        ((Button) e.getSource()).setStyle(STYLE_BLUE);
-    }
-
-    @FXML
-    private void onGrayHover(MouseEvent e) {
-        ((Button) e.getSource()).setStyle(STYLE_GRAY_HOVER);
-    }
-
-    @FXML
-    private void onGrayExit(MouseEvent e) {
-        ((Button) e.getSource()).setStyle(STYLE_GRAY);
     }
 }

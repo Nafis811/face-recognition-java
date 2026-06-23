@@ -15,7 +15,7 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         primaryStage = stage;
-        stage.setTitle("Face Recognition System");
+        stage.setTitle("NUSA LMS - Face Login");
         stage.setMinWidth(900);
         stage.setMinHeight(680);
         navigateTo("main-view.fxml");

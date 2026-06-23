@@ -90,9 +90,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>
-                                com.example.facerecognitionsystem/com.example.facerecognitionsystem.HelloApplication
-                            </mainClass>
+                            <mainClass>com.example.facerecognitionsystem.Launcher</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
