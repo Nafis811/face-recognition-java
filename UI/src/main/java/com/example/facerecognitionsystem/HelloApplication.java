@@ -1,5 +1,6 @@
 package com.example.facerecognitionsystem;
 
+import com.example.facerecognitionsystem.repository.DatabaseSetup;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,6 +16,7 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         primaryStage = stage;
+        DatabaseSetup.initialize(); // setup database saat pertama kali jalan
         stage.setTitle("NUSA LMS - Face Login");
         stage.setMinWidth(900);
         stage.setMinHeight(680);
