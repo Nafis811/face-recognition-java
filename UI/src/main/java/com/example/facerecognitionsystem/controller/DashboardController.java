@@ -5,6 +5,9 @@ import com.example.facerecognitionsystem.model.UserSession;
 import com.example.facerecognitionsystem.repository.MySQLConnection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -21,6 +24,9 @@ public class DashboardController {
     @FXML private Label tugasCountLabel;
     @FXML private Label progresLabel;
 
+    // Tambahkan ini — pastikan fx:id="tugasMendatangContainer" ada di dashboard-view.fxml
+    @FXML private VBox tugasMendatangContainer;
+
     @FXML
     public void initialize() {
         if (!UserSession.isLoggedIn()) {
@@ -33,23 +39,21 @@ public class DashboardController {
         dateLabel.setText(LocalDate.now().format(
                 DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy", new Locale("id"))));
         loadStats();
+        loadTugasMendatang(); // ← tambahkan ini
     }
 
     private void loadStats() {
         try (Connection conn = MySQLConnection.getConnection();
              Statement stmt = conn.createStatement()) {
 
-            // Hitung mata kuliah
             ResultSet rs1 = stmt.executeQuery("SELECT COUNT(*) FROM mata_kuliah");
             if (rs1.next() && mataKuliahCountLabel != null)
                 mataKuliahCountLabel.setText(rs1.getInt(1) + " Aktif");
 
-            // Hitung tugas belum selesai
             ResultSet rs2 = stmt.executeQuery("SELECT COUNT(*) FROM tugas WHERE status = 'belum'");
             if (rs2.next() && tugasCountLabel != null)
                 tugasCountLabel.setText(rs2.getInt(1) + " Belum selesai");
 
-            // Hitung progres (tugas selesai / total tugas)
             ResultSet rs3 = stmt.executeQuery("SELECT COUNT(*) FROM tugas");
             if (rs3.next()) {
                 int total = rs3.getInt(1);
@@ -63,6 +67,62 @@ public class DashboardController {
 
         } catch (Exception e) {
             System.out.println("Error load stats: " + e.getMessage());
+        }
+    }
+
+    // ↓ Method baru — ambil tugas dari DB, sama persis sumber datanya dengan TugasController
+    private void loadTugasMendatang() {
+        if (tugasMendatangContainer == null) return;
+        tugasMendatangContainer.getChildren().clear();
+
+        try (Connection conn = MySQLConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("""
+                SELECT t.judul, t.deadline, mk.nama_mk
+                FROM tugas t
+                JOIN mata_kuliah mk ON t.kode_mk = mk.kode_mk
+                WHERE t.status = 'belum'
+                ORDER BY t.deadline ASC
+             """)) {
+
+            boolean adaTugas = false;
+
+            while (rs.next()) {
+                adaTugas = true;
+                String judul = rs.getString("judul");
+                String deadline = rs.getString("deadline");
+                String namaMk = rs.getString("nama_mk");
+
+                HBox row = new HBox(12);
+                row.setStyle("-fx-padding: 10 14; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0; -fx-alignment: CENTER_LEFT;");
+
+                VBox info = new VBox(2);
+                HBox.setHgrow(info, Priority.ALWAYS);
+
+                Label judulLabel = new Label(judul);
+                judulLabel.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #0f172a;");
+
+                Label mkLabel = new Label(namaMk);
+                mkLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 11px;");
+
+                info.getChildren().addAll(judulLabel, mkLabel);
+
+                Label deadlineLabel = new Label(deadline);
+                deadlineLabel.setStyle("-fx-text-fill: #dc2626; -fx-font-weight: bold; -fx-font-size: 12px;");
+
+                row.getChildren().addAll(info, deadlineLabel);
+                tugasMendatangContainer.getChildren().add(row);
+            }
+
+            // Kalau semua tugas sudah selesai
+            if (!adaTugas) {
+                Label kosong = new Label("🎉 Semua tugas sudah selesai!");
+                kosong.setStyle("-fx-text-fill: #16a34a; -fx-font-size: 13px; -fx-padding: 12;");
+                tugasMendatangContainer.getChildren().add(kosong);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error load tugas mendatang: " + e.getMessage());
         }
     }
 

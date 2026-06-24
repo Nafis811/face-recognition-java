@@ -10,26 +10,20 @@
             <Label text="NUSA LMS" style="-fx-text-fill: white; -fx-font-size: 23px; -fx-font-weight: bold;"/>
             <Label text="Learning Management System" wrapText="true" style="-fx-text-fill: #93c5fd; -fx-font-size: 10px;"/>
             <Region prefHeight="25"/>
-            <Button text="Dashboard" onAction="#handleDashboard" maxWidth="Infinity" alignment="CENTER_LEFT" style="-fx-background-color: transparent; -fx-text-fill: #dbeafe; -fx-padding: 12;"/>
-            <Button text="Mata Kuliah" onAction="#handleMataKuliah" maxWidth="Infinity" alignment="CENTER_LEFT" style="-fx-background-color: transparent; -fx-text-fill: #dbeafe; -fx-padding: 12;"/>
-            <Button text="Tugas Saya" onAction="#handleTugas" maxWidth="Infinity" alignment="CENTER_LEFT" style="-fx-background-color: transparent; -fx-text-fill: #dbeafe; -fx-padding: 12;"/>
+            <Button text="Dashboard" onAction="#handleDashboard" maxWidth="Infinity" alignment="CENTER_LEFT" style="-fx-background-color: transparent; -fx-text-fill: #dbeafe; -fx-padding: 12; -fx-cursor: hand;"/>
+            <Button text="Mata Kuliah" onAction="#handleMataKuliah" maxWidth="Infinity" alignment="CENTER_LEFT" style="-fx-background-color: transparent; -fx-text-fill: #dbeafe; -fx-padding: 12; -fx-cursor: hand;"/>
+            <Button text="Tugas Saya" onAction="#handleTugas" maxWidth="Infinity" alignment="CENTER_LEFT" style="-fx-background-color: transparent; -fx-text-fill: #dbeafe; -fx-padding: 12; -fx-cursor: hand;"/>
             <Button text="Jadwal" maxWidth="Infinity" alignment="CENTER_LEFT" style="-fx-background-color: #2563eb; -fx-text-fill: white; -fx-padding: 12; -fx-background-radius: 8;"/>
             <Region VBox.vgrow="ALWAYS"/>
             <Button text="Keluar" onAction="#handleLogout" maxWidth="Infinity" style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-padding: 11; -fx-background-radius: 8; -fx-cursor: hand;"/>
         </VBox>
     </left>
     <center>
-        <VBox spacing="20" style="-fx-padding: 30;">
-            <Label text="Jadwal Kuliah" style="-fx-text-fill: #0f172a; -fx-font-size: 25px; -fx-font-weight: bold;"/>
-            <TableView fx:id="jadwalTable" VBox.vgrow="ALWAYS">
-                <columns>
-                    <TableColumn fx:id="colHari" text="Hari" prefWidth="120"/>
-                    <TableColumn fx:id="colMk" text="Mata Kuliah" prefWidth="250"/>
-                    <TableColumn fx:id="colJam" text="Jam" prefWidth="120"/>
-                    <TableColumn fx:id="colRuang" text="Ruangan" prefWidth="120"/>
-                    <TableColumn fx:id="colDosen" text="Dosen" prefWidth="200"/>
-                </columns>
-            </TableView>
-        </VBox>
+        <ScrollPane fitToWidth="true" style="-fx-background: #f4f7fb; -fx-background-color: transparent;">
+            <VBox spacing="20" style="-fx-padding: 30;">
+                <Label text="Jadwal Kuliah" style="-fx-text-fill: #0f172a; -fx-font-size: 25px; -fx-font-weight: bold;"/>
+                <VBox fx:id="jadwalContainer" spacing="12"/>
+            </VBox>
+        </ScrollPane>
     </center>
 </BorderPane>
