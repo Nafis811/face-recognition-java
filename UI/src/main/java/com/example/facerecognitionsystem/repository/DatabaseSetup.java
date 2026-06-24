@@ -39,17 +39,22 @@ public class DatabaseSetup {
                 )
             """);
 
+            // Buat database dulu
+            stmt.execute("CREATE DATABASE IF NOT EXISTS uas_pbo");
+            stmt.execute("USE uas_pbo");
+
             // Tabel tugas
             stmt.execute("""
-                CREATE TABLE IF NOT EXISTS tugas (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    kode_mk VARCHAR(10),
-                    judul VARCHAR(100),
-                    deadline DATE,
-                    status VARCHAR(20) DEFAULT 'belum',
-                    FOREIGN KEY (kode_mk) REFERENCES mata_kuliah(kode_mk)
-                )
-            """);
+            CREATE TABLE IF NOT EXISTS tugas (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                kode_mk VARCHAR(10),
+                judul VARCHAR(100),
+                deskripsi TEXT,
+                deadline DATE,
+                status VARCHAR(20) DEFAULT 'belum',
+                FOREIGN KEY (kode_mk) REFERENCES mata_kuliah(kode_mk)
+            )
+        """);
 
             // Insert data awal mata kuliah kalau belum ada
             stmt.execute("""
@@ -57,17 +62,17 @@ public class DatabaseSetup {
                 ('MK001', 'Pemrograman Berorientasi Objek', 3, 'M. Bayu Wibisono, S.Kom.,MM'),
                 ('MK002', 'Sistem Basis Data', 3, 'Iin Ernawati S.Kom., M.Si'),
                 ('MK003', 'Struktur Data', 3, 'Rifka Dwi Amalia, S.Pd., M.Kom.'),
-                ('MK004', 'Jaringan Komputer', 2, 'Dr. Ifik L. Arifin, Dipl.Inf. Arifin'),
+                ('MK004', 'Jaringan Komputer', 2, 'Dr. Ifik L. Arifin, Dipl.Inf.'),
                 ('MK005', 'UI/UX', 3, 'Ika Nurlaili Isnainiyah, S.Kom.,M.Sc')
             """);
 
             // Insert data awal tugas
             stmt.execute("""
-                INSERT IGNORE INTO tugas VALUES
-                (1, 'MK001', 'UAS - Aplikasi OOP', '2026-06-28', 'belum'),
-                (2, 'MK002', 'Sistem Basis Data', '2026-06-30', 'belum'),
-                (3, 'MK003', 'Struktur Data', '2026-07-05', 'selesai')
-            """);
+            INSERT IGNORE INTO tugas VALUES
+            (1, 'MK001', 'UAS - Aplikasi OOP', 'Buat aplikasi Java dengan minimal 3 class, implementasi inheritance, encapsulation, dan polymorphism. Kumpulkan beserta laporan PDF.', '2026-06-28', 'belum'),
+            (2, 'MK002', 'Sistem Basis Data', 'Rancang ERD dan implementasikan database menggunakan MySQL. Sertakan minimal 5 tabel dengan relasi yang tepat dan query SELECT kompleks.', '2026-06-30', 'belum'),
+            (3, 'MK003', 'Struktur Data', 'Implementasikan struktur data Stack dan Queue menggunakan Java. Buat program simulasi antrian dengan minimal 2 operasi dasar.', '2026-07-05', 'selesai')
+        """);
 
             // Tabel jadwal
             stmt.execute("""
