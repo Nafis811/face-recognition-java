@@ -4,25 +4,31 @@
 
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.facerecognitionsystem.controller.TugasController"
-            prefHeight="720" prefWidth="1050" style="-fx-background-color: #f4f7fb;">
+            prefHeight="720" prefWidth="1180" stylesheets="@app.css" styleClass="app-root">
     <left>
-        <VBox prefWidth="215" spacing="10" style="-fx-background-color: #172554; -fx-padding: 28 18;">
-            <Label text="NUSA LMS" style="-fx-text-fill: white; -fx-font-size: 23px; -fx-font-weight: bold;"/>
-            <Label text="Learning Management System" wrapText="true" style="-fx-text-fill: #93c5fd; -fx-font-size: 10px;"/>
-            <Region prefHeight="25"/>
-            <Button text="Dashboard" onAction="#handleDashboard" maxWidth="Infinity" alignment="CENTER_LEFT" style="-fx-background-color: transparent; -fx-text-fill: #dbeafe; -fx-padding: 12; -fx-cursor: hand;"/>
-            <Button text="Mata Kuliah" onAction="#handleMataKuliah" maxWidth="Infinity" alignment="CENTER_LEFT" style="-fx-background-color: transparent; -fx-text-fill: #dbeafe; -fx-padding: 12; -fx-cursor: hand;"/>
-            <Button text="Tugas Saya" maxWidth="Infinity" alignment="CENTER_LEFT" style="-fx-background-color: #2563eb; -fx-text-fill: white; -fx-padding: 12; -fx-background-radius: 8;"/>
-            <Button text="Jadwal" onAction="#handleJadwal" maxWidth="Infinity" alignment="CENTER_LEFT" style="-fx-background-color: transparent; -fx-text-fill: #dbeafe; -fx-padding: 12; -fx-cursor: hand;"/>
+        <VBox prefWidth="240" spacing="8" styleClass="sidebar">
+            <Label text="NUSA LMS" styleClass="sidebar-brand"/>
+            <Label text="Learning Management System" wrapText="true" styleClass="sidebar-subtitle"/>
+            <Region prefHeight="30"/>
+            <Button text="Dashboard" onAction="#handleDashboard" maxWidth="Infinity" alignment="CENTER_LEFT" styleClass="sidebar-btn"/>
+            <Button text="Mata Kuliah" onAction="#handleMataKuliah" maxWidth="Infinity" alignment="CENTER_LEFT" styleClass="sidebar-btn"/>
+            <Button text="Tugas Saya" maxWidth="Infinity" alignment="CENTER_LEFT" styleClass="sidebar-btn-active"/>
+            <Button text="Jadwal" onAction="#handleJadwal" maxWidth="Infinity" alignment="CENTER_LEFT" styleClass="sidebar-btn"/>
             <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Keluar" onAction="#handleLogout" maxWidth="Infinity" style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-padding: 11; -fx-background-radius: 8; -fx-cursor: hand;"/>
+            <Button text="Keluar" onAction="#handleLogout" maxWidth="Infinity" styleClass="sidebar-logout"/>
         </VBox>
     </left>
     <center>
-        <ScrollPane fitToWidth="true" style="-fx-background: #f4f7fb; -fx-background-color: transparent;">
-            <VBox spacing="20" style="-fx-padding: 30;">
-                <Label text="Tugas Saya" style="-fx-text-fill: #0f172a; -fx-font-size: 25px; -fx-font-weight: bold;"/>
-                <VBox fx:id="tugasContainer" spacing="12"/>
+        <ScrollPane fitToWidth="true" styleClass="scroll-pane">
+            <VBox spacing="24" style="-fx-padding: 36 40 36 40;">
+                <HBox alignment="CENTER_LEFT">
+                    <VBox spacing="4">
+                        <Label text="Tugas Saya" styleClass="title-primary"/>
+                        <Label text="Daftar tugas kuliah, instruksi, tenggat waktu, dan status pengerjaan" styleClass="subtitle-primary"/>
+                    </VBox>
+                </HBox>
+                <!-- Container untuk Card Tugas -->
+                <VBox fx:id="tugasContainer" spacing="16"/>
             </VBox>
         </ScrollPane>
     </center>

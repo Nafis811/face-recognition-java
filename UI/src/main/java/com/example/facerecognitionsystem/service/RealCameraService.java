@@ -35,7 +35,7 @@ public class RealCameraService implements CameraService {
             new RecognitionResult("unknown", "Unknown", 0.0));
 
     public RealCameraService(RecognitionClient recognitionClient) {
-        System.load("C:\\Users\\muham\\.m2\\repository\\org\\openpnp\\opencv\\4.9.0-0\\nu\\pattern\\opencv\\windows\\x86_64\\opencv_java490.dll");
+        nu.pattern.OpenCV.loadShared();
         this.recognitionClient = recognitionClient;
     }
 

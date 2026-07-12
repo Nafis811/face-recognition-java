@@ -101,7 +101,7 @@ public class MainController {
                 logRepository.save(new AttendanceLog(UUID.randomUUID().toString(), result));
                 cameraService.stopCapture();
                 UserSession.login(result.getPersonName());
-                HelloApplication.navigateTo("dashboard-view.fxml");
+                HelloApplication.navigateTo("welcome-view.fxml");
             }
         });
     }

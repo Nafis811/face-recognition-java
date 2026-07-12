@@ -94,7 +94,8 @@ public class DashboardController {
                 String namaMk = rs.getString("nama_mk");
 
                 HBox row = new HBox(12);
-                row.setStyle("-fx-padding: 10 14; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0; -fx-alignment: CENTER_LEFT;");
+                row.getStyleClass().add("feed-item");
+                row.setStyle("-fx-alignment: CENTER_LEFT;");
 
                 VBox info = new VBox(2);
                 HBox.setHgrow(info, Priority.ALWAYS);

@@ -52,11 +52,12 @@ public class TugasController {
 
                 // === CARD WRAPPER ===
                 VBox cardWrapper = new VBox(0);
-                cardWrapper.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);");
+                cardWrapper.getStyleClass().add("card-widget");
+                cardWrapper.setStyle("-fx-padding: 0;");
 
                 // === HEADER ROW ===
                 HBox card = new HBox(16);
-                card.setStyle("-fx-padding: 18 20; -fx-alignment: CENTER_LEFT; -fx-cursor: hand;");
+                card.setStyle("-fx-padding: 20 24; -fx-alignment: CENTER_LEFT; -fx-cursor: hand;");
 
                 Label statusDot = new Label(selesai ? "✓" : "!");
                 statusDot.setStyle(selesai

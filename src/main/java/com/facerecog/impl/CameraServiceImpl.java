@@ -19,7 +19,7 @@ public class CameraServiceImpl implements CameraService {
     private final RecognitionClient recognitionClient;
 
     public CameraServiceImpl(RecognitionClient recognitionClient) {
-        nu.pattern.OpenCV.loadLocally();
+        nu.pattern.OpenCV.loadShared();
         this.recognitionClient = recognitionClient;
     }
 

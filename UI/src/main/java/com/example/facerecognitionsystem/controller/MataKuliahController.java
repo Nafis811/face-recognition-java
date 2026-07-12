@@ -39,7 +39,7 @@ public class MataKuliahController {
                 String dosen = rs.getString("dosen");
 
                 VBox card = new VBox(10);
-                card.setStyle("-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);");
+                card.getStyleClass().add("card-widget");
 
                 HBox header = new HBox();
                 Label namaLabel = new Label(namaMk);
@@ -59,7 +59,7 @@ public class MataKuliahController {
 
                 ProgressBar progressBar = new ProgressBar(Math.random() * 0.4 + 0.6);
                 progressBar.setMaxWidth(Double.MAX_VALUE);
-                progressBar.setStyle("-fx-accent: #2563eb;");
+                progressBar.getStyleClass().add("progress-bar");
 
                 card.getChildren().addAll(header, kodeLabel, dosenLabel, progressBar);
                 mataKuliahContainer.getChildren().add(card);

@@ -60,7 +60,8 @@ public class JadwalController {
 
                 // Card utama
                 HBox card = new HBox(16);
-                card.setStyle("-fx-background-color: white; -fx-padding: 18 20; -fx-background-radius: 12; -fx-alignment: CENTER_LEFT; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);");
+                card.getStyleClass().add("card-widget");
+                card.setStyle("-fx-alignment: CENTER_LEFT; -fx-padding: 20 24;");
 
                 // Badge hari
                 String[] colorParts = getBadgeColor(hari).split(";-fx-text-fill:");

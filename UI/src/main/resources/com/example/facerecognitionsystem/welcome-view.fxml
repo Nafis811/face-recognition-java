@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+
+<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.example.facerecognitionsystem.controller.WelcomeController"
+           stylesheets="@login.css" prefHeight="720" prefWidth="1180"
+           style="-fx-background-color: linear-gradient(to bottom right, #f8fafc, #f1f5f9);">
+
+    <VBox alignment="CENTER" spacing="28" maxWidth="550" style="-fx-padding: 40;">
+        <!-- Container Avatar dengan Animasi -->
+        <StackPane fx:id="avatarContainer" prefWidth="110" prefHeight="110" maxWidth="110" maxHeight="110"
+                   style="-fx-background-color: linear-gradient(to bottom right, #2563eb, #1d4ed8); -fx-background-radius: 55; -fx-effect: dropshadow(gaussian, rgba(37,99,235,0.25), 24, 0, 0, 10);">
+            <!-- Icon/Label Checkmark yang bersih -->
+            <Label text="✓" style="-fx-text-fill: white; -fx-font-size: 52px; -fx-font-weight: bold;"/>
+        </StackPane>
+
+        <!-- Informasi Wajah & Pengguna -->
+        <VBox alignment="CENTER" spacing="6">
+            <Label fx:id="statusLabel" text="VERIFIKASI WAJAH BERHASIL" 
+                   style="-fx-text-fill: #15803d; -fx-font-size: 11px; -fx-font-weight: bold; -fx-character-spacing: 2px;"/>
+            <Region prefHeight="8"/>
+            <Label text="Selamat datang kembali," 
+                   style="-fx-text-fill: #64748b; -fx-font-size: 17px; -fx-font-family: 'Segoe UI', system-ui, sans-serif;"/>
+            <Label fx:id="nameLabel" text="Nama Mahasiswa" 
+                   style="-fx-text-fill: #1e3a8a; -fx-font-size: 34px; -fx-font-weight: 800; -fx-font-family: 'Segoe UI', system-ui, sans-serif;"/>
+        </VBox>
+
+        <!-- Progress Indicator Visual -->
+        <VBox alignment="CENTER" spacing="12" maxWidth="280">
+            <!-- Progress Bar Kustom dengan Gaya Glassmorphism -->
+            <ProgressBar fx:id="progressBar" progress="0.0" prefWidth="240" prefHeight="5"
+                         style="-fx-background-color: #e2e8f0; -fx-background-radius: 10;"/>
+            <Label fx:id="loadingLabel" text="Menyinkronkan sesi pembelajaran Anda..." 
+                   style="-fx-text-fill: #94a3b8; -fx-font-size: 11px; -fx-font-style: italic;"/>
+        </VBox>
+    </VBox>
+</StackPane>
